@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel='stylesheet' href='styles.css'>
+</head>
+<body>
+  <div class='search-area'>
+    <input type='text'>
+    <button>Get new image</button>
+  </div>
+  <div class='image-area'>
+    <img src="#">
+  </div>
+  <script>
+      const newImgBtn = document.querySelector('button');
+      const img = document.querySelector('img');
+      const imgDiv = document.querySelector('.image-area');
+      const searchBox = document.querySelector('input');
+
+      window.onload = getNewImg('cars');
+
+      newImgBtn.addEventListener('click', () => {
+        if (searchBox.value) {
+          let string = searchBox.value
+          getNewImg(string)
+        } else {
+          getNewImg('cars')
+        }
+      });
+
+      function getNewImg(string) {
+        fetch('https://api.giphy.com/v1/gifs/translate?api_key=Opoztjqu6ez8t2iLy5GSnU0eo4Hsd3U7&s=' + string, 
+        {mode: 'cors'})
+        .then(response => {
+          return response.json();
+        }).then(response => {
+          img.src = response.data.images.original.url;
+          if (imgDiv.querySelector('p')) {
+            const errorMsg = imgDiv.querySelector('p');
+            errorMsg.remove();
+          }
+        }).catch(error => {
+          displayError();
+        });
+      }
+
+      function displayError() {
+        if (!(imgDiv.querySelector('p'))) {
+          const p = document.createElement('p');
+          p.textContent = 'The search failed :( Try searching for something else.'
+          imgDiv.appendChild(p);
+        }
+      }
+  </script>
+</body>
+</html>
