@@ -30,20 +30,19 @@
         }
       });
 
-      function getNewImg(string) {
-        fetch('https://api.giphy.com/v1/gifs/translate?api_key=Opoztjqu6ez8t2iLy5GSnU0eo4Hsd3U7&s=' + string, 
-        {mode: 'cors'})
-        .then(response => {
-          return response.json();
-        }).then(response => {
-          img.src = response.data.images.original.url;
+      async function getNewImg(string) {
+        try {
+          const response = await fetch('https://api.giphy.com/v1/gifs/translate?api_key=Opoztjqu6ez8t2iLy5GSnU0eo4Hsd3U7&s=' + string, 
+            {mode: 'cors'}); 
+          const gifData = await response.json();
+          img.src = gifData.data.images.original.url;
           if (imgDiv.querySelector('p')) {
             const errorMsg = imgDiv.querySelector('p');
             errorMsg.remove();
           }
-        }).catch(error => {
+        } catch (error) {
           displayError();
-        });
+        }
       }
 
       function displayError() {
